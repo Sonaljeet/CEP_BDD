@@ -1,0 +1,76 @@
+[
+  {
+    "line": 2,
+    "elements": [
+      {
+        "line": 4,
+        "name": "Validate Login Functionality for CEP Application",
+        "description": "",
+        "id": "login-functionality;validate-login-functionality-for-cep-application",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 22739276194,
+              "status": "passed"
+            },
+            "line": 5,
+            "name": "user is on Home Page of CEP Application",
+            "match": {
+              "location": "LoginStepDefinitions.userOnLoginPage()"
+            },
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "duration": 629817658,
+              "status": "passed"
+            },
+            "line": 6,
+            "name": "user enters username and password",
+            "match": {
+              "location": "LoginStepDefinitions.userEnterDetails()"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 4198062322,
+              "status": "passed"
+            },
+            "line": 7,
+            "name": "user clicks on login button",
+            "match": {
+              "location": "LoginStepDefinitions.userClicksLogin()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 9662669047,
+              "status": "passed"
+            },
+            "line": 8,
+            "name": "home page should get loaded",
+            "match": {
+              "location": "LoginStepDefinitions.homePageLoaded()"
+            },
+            "keyword": "Then "
+          }
+        ]
+      }
+    ],
+    "name": "Login Functionality",
+    "description": "",
+    "id": "login-functionality",
+    "keyword": "Feature",
+    "uri": "features/Login.feature",
+    "tags": [
+      {
+        "line": 1,
+        "name": "@default"
+      }
+    ]
+  }
+]
