@@ -12,5 +12,4 @@ import cucumber.api.junit.Cucumber;
 		plugin = {"html:build/reports", "json:build/reports/cucumber.json"}
 		)
 public class CEP_TestRunner {
-
 }
