@@ -46,8 +46,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.List;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Service
 public class PdfService {
@@ -68,7 +68,7 @@ public class PdfService {
             Tesseract tesseract = new Tesseract();
             tesseract.setDatapath(LoadLibs.extractTessResources("tessdata").getAbsolutePath());
             tesseract.setLanguage("eng");
-            tesseract.setPageSegMode(6); // Assume a single uniform block of text
+            tesseract.setPageSegMode(6);
 
             for (int page = 0; page < document.getNumberOfPages(); ++page) {
                 BufferedImage image = pdfRenderer.renderImageWithDPI(page, 500);
@@ -79,7 +79,6 @@ public class PdfService {
 
                 String ocrResult = tesseract.doOCR(gray);
 
-                // Convert preview image to base64
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(image, "png", baos);
                 String base64Image = Base64.getEncoder().encodeToString(baos.toByteArray());
@@ -101,7 +100,14 @@ public class PdfService {
         return result.toString();
     }
 
-    public String compareText(String text1, String text2) {
+    public String compareText(String text1, String text2, String ignorePatternsText) {
+        List<String> ignorePatterns = parseIgnorePatterns(ignorePatternsText);
+
+        for (String pattern : ignorePatterns) {
+            text1 = text1.replaceAll(pattern, "");
+            text2 = text2.replaceAll(pattern, "");
+        }
+
         if (text1.equals(text2)) return "PDFs are identical.";
         StringBuilder diff = new StringBuilder("Differences:\n");
         String[] lines1 = text1.split("\n");
@@ -120,7 +126,14 @@ public class PdfService {
         return diff.toString();
     }
 
-    public String verifyMultipleTextPresence(String extractedText, String imageText, String userInput) {
+    public String verifyMultipleTextPresence(String extractedText, String imageText, String userInput, String ignorePatternsText) {
+        List<String> ignorePatterns = parseIgnorePatterns(ignorePatternsText);
+
+        for (String pattern : ignorePatterns) {
+            extractedText = extractedText.replaceAll(pattern, "");
+            imageText = imageText.replaceAll(pattern, "");
+        }
+
         StringBuilder result = new StringBuilder();
         String[] terms = userInput.split(",");
         for (String term : terms) {
@@ -139,4 +152,19 @@ public class PdfService {
         }
         return result.toString();
     }
+
+    private List<String> parseIgnorePatterns(String ignorePatternsText) {
+        List<String> patterns = new ArrayList<>();
+        if (ignorePatternsText != null && !ignorePatternsText.trim().isEmpty()) {
+            String[] lines = ignorePatternsText.split("\\r?\\n");
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (!trimmed.isEmpty()) {
+                    patterns.add(trimmed);
+                }
+            }
+        }
+        return patterns;
+    }
 }
+
